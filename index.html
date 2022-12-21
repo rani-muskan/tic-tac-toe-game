@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIC TAC TOE</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+
+  body {
+
+    background-color: #db5b86;
+  }
+
+  .box {
+    text-align: center;
+    color: white;
+    border-right: 4px solid white;
+    height: 100px;
+    width: 100px;
+    font-size: 60px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+  }
+
+  #header-text {
+
+    color: white;
+    background-color: purple;
+    border-radius: 35px;
+    display: inline-block; 
+    padding: 10px 30px; 
+    display: none;
+    border: 2px solid white;
+
+  }
+
+  .game-btn {
+    background-color: purple;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 30px;
+    border-radius: 35px;
+    font-weight: bold;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cont {
+    display: grid;
+    grid-template-columns: auto auto auto;
+  }
+
+  .tic {
+    color: white;
+    background-color: purple;
+    border: 2px solid white;
+    border-radius: 30px;
+    display: inline-block;
+    padding: 10px 30px;
+  }
+</style>
+
+<body>
+
+
+  <div class="wrapper">
+    <div class="container my-5 text-center">
+
+      <h1 class="text-center mb-4 tic">TIC TAC TOE</h1>
+      <div class="main">
+        <div class="cont">
+          <div style="border-bottom: 4px solid white;" class="box" id="0"></div>
+          <div style="border-bottom: 4px solid white;" class="box" id="1"></div>
+          <div style="border-bottom: 4px solid white; border-right: none;" class="box" id="2"></div>
+          <div style="border-bottom: 4px solid white;" class="box" id="3"></div>
+          <div style="border-bottom: 4px solid white;" class="box" id="4"></div>
+          <div style="border-bottom: 4px solid white; border-right: none;" class="box" id="5"></div>
+          <div class="box" id="6"></div>
+          <div class="box" id="7"></div>
+          <div style="border-right: none;" class="box" id="8"></div>
+
+
+
+        </div>
+
+      </div>
+
+      <div class="m-auto text-center ">
+        <h2 id="header-text" class="turn text-center mt-5"> </h2>
+        <br>
+        <a href="index.html"><button id="resetbtn" class=" game-btn mt-3"> RESET</button></a>
+      </div>
+    </div>
+  </div>
+
+  
+  
+
+  <!-- script -->
+
+  <script>
+    const boxes = Array.from(document.getElementsByClassName('box'));
+
+
+    const headertext = document.getElementById('header-text');
+
+    const areas = [null, null, null, null, null, null, null, null, null];
+
+    const o_text = "O";
+
+    const x_text = "X";
+
+    let currentplayer = o_text;
+
+    let winboxesids = [];
+
+    function bindclickevent() {
+      boxes.forEach(box => {
+        box.addEventListener('click', handleboxclick);
+      })
+    }
+    bindclickevent();
+
+    function handleboxclick(e) {
+      if (winboxesids.length > 0) {
+        return
+      }
+
+      const id = e.target.id;
+      if (!areas[id]) {
+
+        areas[id] = currentplayer;
+
+        e.target.innerHTML = currentplayer;
+
+        if (hasplayerwon(currentplayer)) {
+          headertext.innerHTML = ` ${currentplayer} has Won!!`;
+          headertext.style.display = 'inline-block';
+          changewinboxesbg();
+          return
+        }
+
+        currentplayer = currentplayer === o_text ? x_text : o_text;
+
+
+      }
+
+
+
+    }
+
+    function hasplayerwon(cplayer) {
+      if (areas[0] === cplayer) {
+        if (areas[1] === cplayer && areas[2] === cplayer) {
+          winboxesids = [0, 1, 2];
+          return true;
+        }
+        if (areas[3] === cplayer && areas[6] === cplayer) {
+          winboxesids = [0, 3, 6];
+          return true;
+        }
+        if (areas[4] === cplayer && areas[8] === cplayer) {
+          winboxesids = [0, 4, 8];
+          return true;
+        }
+      }
+      if (areas[4] === cplayer) {
+        if (areas[1] === cplayer && areas[7] === cplayer) {
+          winboxesids = [4, 1, 7];
+          return true;
+        }
+        if (areas[3] === cplayer && areas[5] === cplayer) {
+          winboxesids = [4, 3, 5];
+          return true;
+        }
+        if (areas[2] === cplayer && areas[6] === cplayer) {
+          winboxesids = [4, 2, 6];
+          return true;
+        }
+      }
+      if (areas[8] === cplayer) {
+        if (areas[2] === cplayer && areas[5] === cplayer) {
+          winboxesids = [4, 2, 5];
+          return true;
+        }
+        if (areas[6] === cplayer && areas[7] === cplayer) {
+          winboxesids = [4, 6, 7];
+          return true;
+        }
+
+
+      }
+
+    }
+
+    function changewinboxesbg() {
+      winboxesids.forEach(id => {
+        boxes[id].style.color = "purple"
+      })
+      boxes.forEach(box => {
+        box.style.cursor = "default";
+      })
+    }
+
+
+
+
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="script.js"></script>
+  <script src="bootstrap.min.js"></script>
+</body>
+
+</html>
